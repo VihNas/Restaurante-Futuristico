@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/cpp:1-ubuntu-24.04
+FROM mcr.microsoft.com/devcontainers/cpp:1-debian-11
 
 # Everything below this is needed for installing MariaDB
 # Instructions are copied and modified from: https://mariadb.com/docs/clients/mariadb-connectors/connector-cpp/install/
@@ -8,7 +8,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 COPY ./install-mariadb.sh /tmp/
 RUN chmod +x /tmp/install-mariadb.sh && /tmp/install-mariadb.sh && rm -f /tmp/install-mariadb.sh
 
-ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="3.22.2"
+ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="none"
 
 # Optionally install the cmake for vcpkg
 COPY ./reinstall-cmake.sh /tmp/

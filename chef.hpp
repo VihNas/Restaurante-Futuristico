@@ -1,54 +1,32 @@
 #pragma once
-
 #include <string>
+#include <fstream>
 
-// Esta classe representa um atendimento. O atendimento terá um subprocesso vinculado a ele
-class Atendimento final {
-public:
-    // Construtor da classe. Para se criar um atendimento, é necessário informar o ID do chef e da mesa.
-    // Ao se criar um objeto Atendimento, um subprocesso pronto com pipes para receber comunicação entre processos é gerado
-    Atendimento(unsigned int chefId, unsigned int mesaId);
+// forward  declaration para evitar include circular
 
-    // Destrutor da classe. Ao invocá-lo, o subprocesso vinculado a este atendimento deve ser encerrado.
-    ~Atendimento();
-
-    void prepararPedido(const std::string &pedido) const;
-
-private:
-    // ID do processo (pid)
-    pid_t pid{-1};
-    // Descritores de arquivo que guardam o "número dos canais" onde serão realizadas a comunicação entre processos.
-    // São dois inteiros, inicializados previamente com o valor -1
-    int fd[2]{-1, -1};
-    // Isso não é necessário, apenas para fim didático
-    std::string quemSou;
-
-    // Método chamado na inicialização do atendimento
-    void iniciar();
-
-
-};
+class Atendimento;
 
 class Chef {
 public:
-    bool estaLivre() const; // novo método
-public:
-    explicit Chef(unsigned int id);
+    Chef(unsigned int id, const std::string& nome);
+    ~Chef();
 
     void iniciarAtendimento(unsigned int mesa);
-
-    void prepararPedido(const std::string &pedido);
-
-    void encerrarAtendimento();
+    void prepararPedido(const std::string& pedido);
+    void encerrarMesa();
+    bool livre() const;
 
 private:
-    const unsigned int id;
-    unsigned int mesaAtual{0};
+    unsigned int id;
+    std::string nome;
+    unsigned int mesaAtual;
+    Atendimento* atendimento = nullptr;
+
     std::string nomeArquivo;
     std::ofstream log;
-    Atendimento *atendimento;
 
-    void registrarInicioMesa(unsigned int mesa);
-    void registrarPedido(const std::string &pedido);
-    void registrarEncerramentoMesa();
+    void registrarInicio(unsigned int mesa);
+    void registrarPedido(const std::string& pedido);
+    void registrarFim();
 };
+

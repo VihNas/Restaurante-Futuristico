@@ -7,12 +7,15 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${file}",
+                "main.cpp",
+                "restaurante.cpp",
+                "chef.cpp",
+                "mesa.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "main"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"

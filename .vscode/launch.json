@@ -10,14 +10,14 @@
             "name": "(gdb) Executar programa C/C++",
             "type": "cppdbg",
             "request": "launch",
-            "program": "C:/Users/natal/.vscode/RESTAURANTE/${fileBasenameNoExtension}.exe",
+            "program": "/workspaces/RESTAURANTE/main",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "C:/Users/natal/.vscode/RESTAURANTE",
+            "cwd": "/workspaces/RESTAURANTE",
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+            "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
                 {
                     "description": "Habilitar formatação bonitinha no GDB",
