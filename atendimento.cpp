@@ -89,7 +89,7 @@ void Atendimento::iniciar() {
         std::string msg(buffer);
 
         if (msg == "fim") {
-            log << "\n--- Mesa finalizada ---\n";
+            log << "\n꣑୧・┈・┈・꣑୧・:  Mesa Finalizada :・꣑୧・┈・┈・꣑୧\n";
             break;
         }
 

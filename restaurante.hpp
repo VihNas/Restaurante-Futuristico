@@ -19,10 +19,8 @@ private:
     std::queue<std::pair<int, std::queue<std::string>>> filaEspera;
 
     // mesa → id do chef que está atendendo (-1 = nenhum)
-    std::vector<int> mesaParaChefe;
+    std::vector<int> mesaParaChefe;//armazena qm está atendendo cada mesa
 
-    // índice antigo (não mais necessário, mas mantido pra compatibilidade)
-    int indiceChef;
 
 public:
     Restaurante(int nChefes, int nMesas);
@@ -35,6 +33,8 @@ public:
 
     // fecha tudo
     void finalizar();
+    //pro pedido acumular corretamente 
+    void adicionarPedidoNaFila(int mesa, const std::string& pedido);
 };
 
 

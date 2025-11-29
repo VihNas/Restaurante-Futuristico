@@ -54,7 +54,7 @@ void Chef::prepararPedido(const std::string& pedido) {
     registrarPedido(pedido);
     atendimento->enviarPedido(pedido);
 
-    std::cout << "Resposta do chef " << nome << ": PRONTO | MESA:" << mesaAtual << std::endl;
+    std::cout << "Resposta do chef " << nome << ": O pedido está pronto --> para a mesa:" << mesaAtual << std::endl;
 }
 
 
@@ -67,9 +67,9 @@ void Chef::encerrarMesa() {//só finalizará quando for digitado 'fim', não há
 
     delete atendimento;//libera memoria
     atendimento = nullptr;
-    mesaAtual = 0;
 
-    std::cout << ">> " << nome << " finalizou o atendimento de sua mesa!" << mesaAtual << std::endl;//nao funciona esse mesa tual
+    std::cout << ">> " << nome << " finalizou o atendimento da mesa ;)" << std::endl;
+    mesaAtual = 0;
 }
 
 void Chef::registrarInicio(unsigned int mesa) {

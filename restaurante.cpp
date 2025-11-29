@@ -29,17 +29,15 @@ Restaurante::Restaurante(int nChefes, int nMesas) {
     // -1 sig sem chefe 
     mesaParaChefe.assign(nMesas + 1, -1);
 
-    indiceChef = 0;
 }
 
-
 void Restaurante::processarPedido(int mesa, const std::string& pedidoRaw) {
-    //  limpeza  do pedido, estética, não necessario, verificaçoes de entrada ---
+    //  limpeza  do pedido, estética, não necessario, verificaçoes de entrada 
     std::string pedido = pedidoRaw;
     while (!pedido.empty() && isspace((unsigned char)pedido.front())) pedido.erase(pedido.begin());
     while (!pedido.empty() && isspace((unsigned char)pedido.back())) pedido.pop_back();
 
-    if (mesa < 1 || mesa >= (int)mesaParaChefe.size()) {
+    if (mesa <= 0 || mesa >= mesaParaChefe.size()) {
         std::cerr << "Mesa inválida: " << mesa << std::endl;
         return;
     }
@@ -91,21 +89,17 @@ void Restaurante::processarPedido(int mesa, const std::string& pedidoRaw) {
 
     
     if (!chefsLivres.empty()) {
-        int indiceLivre = chefsLivres.front(); // O(1)
-        chefsLivres.pop();                     // O(1)
+    int idxLivre = chefsLivres.front();   // pega o índice do chef disponível
+    chefsLivres.pop();                    // remove da lista de livres
 
-        // atribui o chef livre à mesa
-        mesaParaChefe[mesa] = indiceLivre;
-        chefes[indiceLivre]->iniciarAtendimento(mesa);
-        chefes[indiceLivre]->prepararPedido(pedido);
-        return;
-    }
+    mesaParaChefe[mesa] = idxLivre;
 
-    // se por acaso não tiver nenhum chef livre, enfileira a mesa na fila de espera 
-    // usamos uma fila de pedidos por mesa para manter pedidos 
-    std::queue<std::string> filaPed;
-    filaPed.push(pedido);
-    filaEspera.push({mesa, std::move(filaPed)}); 
+    chefes[idxLivre]->iniciarAtendimento(mesa);
+    chefes[idxLivre]->prepararPedido(pedido);
+    return;
+}
+
+    adicionarPedidoNaFila(mesa, pedido);
 
     // log  das mesas não atendidas 
     std::ofstream log("MesasNaoAtendidas.txt", std::ios::app);
@@ -143,6 +137,31 @@ void Restaurante::liberarChefe(int mesa) {
         }
     }
 }
+void Restaurante::adicionarPedidoNaFila(int mesa, const std::string& pedido) {
+    std::queue<std::pair<int, std::queue<std::string>>> temp;
+    bool achou = false;
+
+    while (!filaEspera.empty()) {
+        auto atual = std::move(filaEspera.front());
+        filaEspera.pop();
+
+        if (atual.first == mesa) {
+            atual.second.push(pedido);
+            achou = true;
+        }
+
+        temp.push(std::move(atual));
+    }
+
+    filaEspera = std::move(temp);
+
+    if (!achou) {
+        std::queue<std::string> filaPed;
+        filaPed.push(pedido);
+        filaEspera.push({mesa, std::move(filaPed)});
+    }
+}
+
 
 // encerra tudo 
 void Restaurante::finalizar() {
