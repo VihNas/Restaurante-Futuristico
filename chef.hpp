@@ -2,25 +2,23 @@
 #include <string>
 #include <fstream>
 
-// forward  declaration para evitar include circular
-
 class Atendimento;
 
 class Chef {
 public:
-    Chef(unsigned int id, const std::string& nome);
-    ~Chef();
+    Chef(unsigned int id, const std::string& nome);//construtor
+    ~Chef();//destrutor
 
     void iniciarAtendimento(unsigned int mesa);
-    void prepararPedido(const std::string& pedido);
+    void prepararPedido(const std::string& pedido);//registra preparo do pedido
     void encerrarMesa();
     bool livre() const;
 
 private:
-    unsigned int id;
-    std::string nome;
+    unsigned int id;//identificador o chef
+    std::string nome;//nome do chef
     unsigned int mesaAtual;
-    Atendimento* atendimento = nullptr;
+    Atendimento* atendimento = nullptr;//fila vinculada ao atendimento
 
     std::string nomeArquivo;
     std::ofstream log;

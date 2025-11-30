@@ -2,9 +2,10 @@
 
 #include <string>
 #include <fstream>
+//necessarias para manipulação de processos (fork, pipe, read, write)
 #include <sys/types.h>
 #include <unistd.h>
-#include <signal.h>
+#include <signal.h>//para enviar sinais do sistema (kill)
 
 class Atendimento {
 public:
@@ -12,11 +13,11 @@ public:
     ~Atendimento();
 
     void enviarPedido(const std::string& pedido);
-    void iniciar(); // rotina do processo filho (bloqueante)
+    void iniciar(); // roda do processo filho (bloqueante)
 
 private:
-    unsigned int chefId;
-    unsigned int mesaId;
+    unsigned int chefId;//identifica chefe responsável
+    unsigned int mesaId;//identifica mesa atendida
     int fd[2];
     pid_t pid;
     std::string nomeArquivo;

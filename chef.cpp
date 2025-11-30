@@ -31,8 +31,9 @@ bool Chef::livre() const {
 //Aqui vai inciar o atendimento de uma mesa
 //basic: se o chef não ta ocupado, ele começa um novo atendimento
 void Chef::iniciarAtendimento(unsigned int mesa) {
-    if (!livre()) return;
-
+    if (!livre()){ 
+        return;
+    }    
     mesaAtual = mesa;
     registrarInicio(mesa);//salva no arquivo q começou a mesa
 

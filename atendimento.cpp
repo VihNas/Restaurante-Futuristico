@@ -18,7 +18,7 @@ Atendimento::Atendimento(unsigned int chefId, unsigned int mesaId)//construtor d
         exit(EXIT_FAILURE);//caso de erro na criação de comunicação, cai fora
     }
 
-    pid = fork();
+    pid= fork();
 
     if (pid < 0) {
         perror("fork");
@@ -41,12 +41,12 @@ Atendimento::Atendimento(unsigned int chefId, unsigned int mesaId)//construtor d
 }
 
 Atendimento::~Atendimento() {//pai e filho se separam apos o fork 
-    if (quemSou == "Pai") {
+    if (quemSou== "Pai") {
         // fechar escrita e matar o filho
         close(fd[1]);
         // tenta primeiro terminar graciosamente
         //kill(pid, SIGKILL);
-        waitpid(pid, nullptr, 0);// evita filho zumbi
+        waitpid(pid, nullptr,0);// evita filho zumbi
     } else {
         // filho já fechou no final da rotina
         close(fd[0]);
@@ -69,7 +69,7 @@ void Atendimento::enviarPedido(const std::string& pedido) {
                       << std::strerror(errno) << "\n";
         }
     }
-    (void)nw; // // ignorar retorno aqui; em app real trate erros
+    (void)nw; //ignorar retorno aqui; em app real trate erros
 }
 
 
@@ -84,15 +84,13 @@ void Atendimento::iniciar() {
 
     while (true) {
         ssize_t n = read(fd[0], buffer, sizeof(buffer) - 1);
-        if (n <= 0) break;
-        buffer[n] = '\0';
-        std::string msg(buffer);
-
-        if (msg == "fim") {
-            log << "\n꣑୧・┈・┈・꣑୧・:  Mesa Finalizada :・꣑୧・┈・┈・꣑୧\n";
+//o pai fechou o pipe=> então saímos do loop       
+        if (n<= 0){
             break;
         }
-
+        buffer[n] = '\0';
+        std::string msg(buffer);
+// Força gravação imediata no arquivo
         log << " - " << msg << "\n";
         log.flush();
     }

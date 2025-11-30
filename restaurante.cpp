@@ -80,13 +80,6 @@ void Restaurante::processarPedido(int mesa, const std::string& pedidoRaw) {
         chefes[id]->prepararPedido(pedido);
         return;
     }
-
-    
-    if (pedido == "fim") {
-        // mesa sem chefe que manda "fim" -> simplesmente ignora, pq é como se eles estivem pagando a conta
-        return;
-    }
-
     
     if (!chefsLivres.empty()) {
     int idxLivre = chefsLivres.front();   // pega o índice do chef disponível
@@ -123,13 +116,13 @@ void Restaurante::liberarChefe(int mesa) {
 
     // se houver fila de espera e houver chef livre, atende o próximo 
     if (!filaEspera.empty() && !chefsLivres.empty()) {
-        auto [mesaFila, filaPedidos] = std::move(filaEspera.front());
+        auto [mesaFila, filaPedidos]= std::move(filaEspera.front());
         filaEspera.pop();
 
         int idxLivre = chefsLivres.front();
         chefsLivres.pop();
 
-        mesaParaChefe[mesaFila] = idxLivre;
+        mesaParaChefe[mesaFila]=idxLivre;
         chefes[idxLivre]->iniciarAtendimento(mesaFila);
         while (!filaPedidos.empty()) {
             chefes[idxLivre]->prepararPedido(filaPedidos.front());
@@ -140,28 +133,28 @@ void Restaurante::liberarChefe(int mesa) {
 void Restaurante::adicionarPedidoNaFila(int mesa, const std::string& pedido) {
     std::queue<std::pair<int, std::queue<std::string>>> temp;
     bool achou = false;
-
+//percorre os elementos da fila principal
     while (!filaEspera.empty()) {
-        auto atual = std::move(filaEspera.front());
+        //move o primeiro elemento da fila (par: mesa + fila de pedidos)
+        auto atual =std::move(filaEspera.front());
         filaEspera.pop();
-
-        if (atual.first == mesa) {
+//se esta é a mesa procurada, adicionamos o pedido a fila dela
+        if (atual.first== mesa) {
             atual.second.push(pedido);
-            achou = true;
+            achou= true;
         }
-
+//após verificar/modificar, coloca o elemento na fila temporaria
         temp.push(std::move(atual));
     }
-
+//no final do loop, a fila original foi esvaziada e reconstruida na fila temporaria
     filaEspera = std::move(temp);
-
+//se nenhuma mesa foi encontrada, então este é um novo pedido
     if (!achou) {
-        std::queue<std::string> filaPed;
+        std::queue<std::string> filaPed;//cria nova fila de pedidos
         filaPed.push(pedido);
-        filaEspera.push({mesa, std::move(filaPed)});
+        filaEspera.push({mesa, std::move(filaPed)});//adiciona mesa e pedido no final da fila de espera
     }
 }
-
 
 // encerra tudo 
 void Restaurante::finalizar() {
